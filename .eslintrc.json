@@ -1,0 +1,132 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["./tsconfig.json"]
+  },
+  "ignorePatterns": ["next.config.js"],
+  "env": {
+    "jest/globals": true
+  },
+  "extends": [
+    "standard",
+    "standard-react",
+    "eslint:recommended",
+    "next/core-web-vitals",
+    "eslint-config-next",
+    "plugin:jest/recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended" // this must be the last extension
+  ],
+  "plugins": ["jest", "jest-dom", "import", "react", "testing-library", "@typescript-eslint"],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "semi": false,
+        "printWidth": 120,
+        "singleQuote": true,
+        "jsxSingleQuote": true,
+        "trailingComma": "all",
+        "bracketSpacing": true,
+        "arrowParens": "always",
+        "endOfLine": "auto"
+      }
+    ],
+    "import/first": 0,
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal"],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "@kaizen-ui/**",
+            "group": "external",
+            "position": "after"
+          },
+          {
+            "pattern": "@nvidia/**",
+            "group": "external",
+            "position": "after"
+          },
+          {
+            "pattern": "@ngc/**",
+            "group": "external",
+            "position": "after"
+          },
+          {
+            "pattern": "core/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "modules/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "components/**",
+            "group": "internal",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "never",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "import/no-webpack-loader-syntax": 0,
+    "object-curly-spacing": ["error", "always"],
+    "computed-property-even-spacing": 0,
+    "no-use-before-define": "error",
+    "react/jsx-sort-props": [
+      "error",
+      {
+        "callbacksLast": false,
+        "shorthandFirst": false,
+        "shorthandLast": false,
+        "ignoreCase": true,
+        "noSortAlphabetically": false,
+        "reservedFirst": false
+      }
+    ],
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
+    "no-unused-vars": "off",
+    "curly": ["warn", "all"],
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/object-curly-spacing": ["error", "always"],
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "ignoreRestSiblings": true }],
+    "jest/expect-expect": [
+      "warn",
+      {
+        "assertFunctionNames": ["expect", "assert*"]
+      }
+    ]
+  },
+  "globals": {
+    "Event": false,
+    "CustomEvent": false,
+    "URL": false,
+    "beforeAll": false,
+    "afterAll": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "test": false,
+    "jest": false,
+    "describe": false,
+    "it": false,
+    "expect": false,
+    "fetch": true,
+    "JSX": true
+  }
+}
