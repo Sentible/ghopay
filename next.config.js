@@ -13,6 +13,7 @@ const nextConfig = {
   },
   // swcMinify: true,
   transpilePackages: ['@lens-protocol'],
+  basePath: '',
 };
 
 module.exports = nextConfig;

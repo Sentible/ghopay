@@ -7,6 +7,10 @@ const StyledMiniProfile = styled.div`
   user-select: none;
   white-space: nowrap;
 
+  &.true img {
+    cursor: pointer;
+  }
+
   img {
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1);
   }
@@ -19,10 +23,31 @@ const StyledMiniProfile = styled.div`
 `
 StyledMiniProfile.displayName = "StyledMiniProfile"
 
+type Props = {
+  address?: string
+  image?: string
+  label?: string
+  size?: number
+  onClick?: () => void
+  viewable?: boolean
+}
 
-export const MiniProfile = ({ address = '', image = '', label = '', size = 100, onClick = () => { } }) => {
+const viewUrl = (address: string) => `https://sentible.app/view/${address}/nfts`
+export const MiniProfile = ({ address = '', image = '', label = '', size = 100, onClick, viewable }: Props) => {
+  const className = [
+    "mini-profile",
+    viewable
+  ].join(" ")
+
   return (
-    <StyledMiniProfile className="mini-profile" onClick={onClick}>
+    <StyledMiniProfile className={className} onClick={(e) => {
+      const isImage = e.target instanceof HTMLImageElement
+      if (viewable && address && isImage) {
+        window.open(viewUrl(address), "_blank")
+      } else {
+        onClick?.()
+      }
+    }}>
       <CustomAvatar address={address as string} ensImage={image} size={size} />
       <p className="label">{label}</p>
     </StyledMiniProfile>

@@ -16,7 +16,7 @@ const PayUserSelect = ({
   setValue: (value: string | null) => void
 }) => {
   const { followers } = useGetPayData()
-  const [search, setSearch] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
 
   const noFollowers = followers.length === 0
 

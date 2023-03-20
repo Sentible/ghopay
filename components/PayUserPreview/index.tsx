@@ -114,8 +114,8 @@ const PayUserPreview = ({ profile }: Props) => {
     <StyledPayCard>
       {Instructions}
       <SideBySide>
-        <MiniProfile address={user?.ownedBy} image={senderImage} label={user?.name} />
-        {ownedBy && <MiniProfile address={ownedBy} image={recipientImage} label={name} />}
+        <MiniProfile address={user?.ownedBy} image={senderImage} label={user?.name} viewable />
+        {ownedBy && <MiniProfile address={ownedBy} image={recipientImage} label={name} viewable />}
       </SideBySide>
       {ownedBy && (
         <ButtonGroup className="button-group">
