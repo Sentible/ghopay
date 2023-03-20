@@ -1,4 +1,6 @@
+import { usePrevious } from "@/hooks/usePrevious"
 import { CustomAvatar } from "@/pages"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 
 const StyledMiniProfile = styled.div`
@@ -39,6 +41,21 @@ export const MiniProfile = ({ address = '', image = '', label = '', size = 100, 
     viewable
   ].join(" ")
 
+  const [img, setImg] = useState<string | undefined>()
+
+  const prevImage = usePrevious(image)
+
+  useEffect(() => {
+    if (image !== prevImage) {
+      setImg(image)
+    } else {
+      setImg(undefined)
+    }
+    return () => {
+      setImg(undefined)
+    }
+  }, [image, prevImage])
+
   return (
     <StyledMiniProfile className={className} onClick={(e) => {
       const isImage = e.target instanceof HTMLImageElement
@@ -48,7 +65,7 @@ export const MiniProfile = ({ address = '', image = '', label = '', size = 100, 
         onClick?.()
       }
     }}>
-      <CustomAvatar address={address as string} ensImage={image} size={size} />
+      <CustomAvatar address={address as string} ensImage={img} size={size} />
       <p className="label">{label}</p>
     </StyledMiniProfile>
   )
