@@ -11,7 +11,7 @@ export default function LensConnect() {
   const { isConnected } = useAccount();
   const { profile, setProfile } = useLensProfile();
 
-  const onLoginClick = useCallback(async (tokens: any, profile: LensProfile) => {
+  const onLoginClick = useCallback(async (tokens: any, profile: any) => {
     const formattedProfile = {
       ...profile,
       picture: {
