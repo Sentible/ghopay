@@ -51,10 +51,10 @@ contract GhoPay is ReentrancyGuard {
   }
 
   constructor() {
-    token = 0xcbE9771eD31e761b744D3cB9eF78A1f32DD99211;
+    token = 0x9FD21bE27A2B059a288229361E2fA632D8D2d074;
     SentibleRouterAddress = 0xF7c9E30f36d79ae499B62baCaf58C8501d969877;
     SentibleRouter = ISentibleRouterV1(0xF7c9E30f36d79ae499B62baCaf58C8501d969877);
-    PaymentToken = IERC20(0xcbE9771eD31e761b744D3cB9eF78A1f32DD99211);
+    PaymentToken = IERC20(0x9FD21bE27A2B059a288229361E2fA632D8D2d074);
     PaymentToken.approve(0xF7c9E30f36d79ae499B62baCaf58C8501d969877, type(uint256).max);
   }
 
@@ -90,7 +90,8 @@ contract GhoPay is ReentrancyGuard {
     address spender,
     address payable swapTarget,
     bytes calldata swapCallData,
-    uint256 sellAmount
+    uint256 sellAmount,
+    bool transferFrom
   ) internal returns (uint256) {
     address contractAddress = address(this);
     require(sellToken.allowance(msg.sender, contractAddress) >= sellAmount && address(sellToken) != address(buyToken), "Allowance required or Sell token cannot be the same as buy token");
@@ -100,7 +101,9 @@ contract GhoPay is ReentrancyGuard {
 
     sellToken.approve(spender, sellAmount);
     // buyToken.approve(spender, type(uint256).max);
-    sellToken.safeTransferFrom(msg.sender, contractAddress, sellAmount);
+    if (transferFrom) {
+      sellToken.safeTransferFrom(msg.sender, contractAddress, sellAmount);
+    }
 
     // Call the encoded swap function call on the contract at `swapTarget`,
     // passing along any ETH attached to this function call
@@ -131,7 +134,7 @@ contract GhoPay is ReentrancyGuard {
     address to
   ) external payable nonReentrant {
     // Call the fillQuote internal function to perform the token swap and get the amount of buyToken received.
-    uint256 buyTokenReceived = _fillQuote(sellToken, buyToken, spender, swapTarget, swapCallData, sellAmount);
+    uint256 buyTokenReceived = _fillQuote(sellToken, buyToken, spender, swapTarget, swapCallData, sellAmount, true);
 
     // Transfer the received `buyToken` to the `msg.sender`.
     buyToken.safeTransfer(to, buyTokenReceived);
@@ -148,62 +151,36 @@ contract GhoPay is ReentrancyGuard {
     address to
   ) external payable nonReentrant {
     // Call the fillQuote internal function to perform the token swap and get the amount of buyToken received.
-    uint256 buyTokenReceived = _fillQuote(sellToken, buyToken, spender, swapTarget, swapCallData, sellAmount);
+    uint256 buyTokenReceived = _fillQuote(sellToken, buyToken, spender, swapTarget, swapCallData, sellAmount, true);
 
     // Deposit the received buyToken to SentibleRouter.
     SentibleRouter.deposit(address(buyToken), buyTokenReceived, to);
   }
 
-  function quickPay(
-    IERC20 sellToken,
-    address spender,
-    address payable swapTarget,
-    bytes calldata swapCallData,
-    uint256 sellAmount,
-    address to
-  ) external payable nonReentrant {
-    // Call the fillQuote internal function to perform the token swap and get the amount of buyToken received.
-    uint256 buyTokenReceived = _fillQuote(sellToken, PaymentToken, spender, swapTarget, swapCallData, sellAmount);
-
-    // Deposit the received buyToken to SentibleRouter.
-    SentibleRouter.deposit(address(PaymentToken), buyTokenReceived, to);
-  }
-
-  function wrapETH(
-    IWETH WETH,
-    uint256 ethAmount,
-    address to
-  ) external payable {
-    require(msg.value == ethAmount, "ETH amount mismatch");
-
-    // Wrap the ETH sent with the transaction into WETH
-    IWETH(WETH).deposit{value: msg.value}();
-
-    // transfer to user
-    IWETH(WETH).transferFrom(address(this), to, ethAmount);
-  }
-
   function wrapETHAndPay(
     IWETH WETH,
+    IERC20 buyToken,
     uint256 ethAmount,
     address spender,
     address payable swapTarget,
     bytes calldata swapCallData,
     address to
   ) external payable {
-
     require(msg.value == ethAmount, "ETH amount mismatch");
+    // add users ETH to the contract
+    address contractAddress = address(this);
+    (bool success, ) = contractAddress.call{value: ethAmount}("");
+    require(success, "Failed to transfer ETH");
 
     // Wrap the ETH sent with the transaction into WETH
     IWETH(WETH).deposit{value: msg.value}();
 
     // Call the fillQuote internal function to perform the token swap and get the amount of buyToken received.
-    uint256 buyTokenReceived = _fillQuote(WETH, PaymentToken, spender, swapTarget, swapCallData, ethAmount);
+    uint256 buyTokenReceived = _fillQuote(WETH, buyToken, spender, swapTarget, swapCallData, ethAmount, false);
 
     // Deposit the received buyToken to SentibleRouter.
     SentibleRouter.deposit(address(PaymentToken), buyTokenReceived, to);
   }
-
 
   receive() external payable {}
 }

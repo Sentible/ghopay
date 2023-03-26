@@ -138,8 +138,6 @@ export const useGetTokens = () => {
     return _tokens;
   }, [mainnetData, goerliTokens, optimismTokens, polygonTokens, arbitrumTokens]);
 
-  console.log('tokens', tokens);
-
   useEffect(() => {
     if (!isConnected) return;
   }, [isConnected]);

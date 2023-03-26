@@ -5,13 +5,14 @@ import PayUserPreview from "@/components/PayUserPreview"
 import PayUserSelect from "@/components/PayUserSelect"
 import { MiniProfile } from "@/components/ProfileCard"
 import useGetPayData from "@/hooks/useGetPayData"
-import { useGetEtherPrice } from "@/hooks/useGetEtherPrice"
+import { toWei, useGetEtherPrice } from "@/hooks/useGetEtherPrice"
 import { AlchemyToken, useFetchTokenMetadata, useGetTokens } from "@/hooks/useGetTokens"
 import { GhoPayProvider, useGhoPayCtx } from "@/utils/store/GhoPayContext"
 import { useEffect, useMemo, useState } from "react"
 import styled from "styled-components"
 import { useBalance, useNetwork } from "wagmi"
 import { currencyFormatter, numberFormatter } from "@/utils/utils"
+import { utils } from "ethers"
 
 const SideBySide = styled.div`
   align-items: center;
@@ -335,7 +336,7 @@ const TokenSelect = ({
 
 const PayPreview = () => {
   const { set_id, toProfile, user } = useGetPayData()
-  const { paymentToken, setPaymentToken } = useGhoPayCtx()
+  const { paymentToken, setPaymentToken, wethPay, isPaying, setIsPaying } = useGhoPayCtx()
 
   const { data: userBalance } = useBalance({
     address: user?.ownedBy as any
@@ -344,6 +345,7 @@ const PayPreview = () => {
   const { data } = useGetEtherPrice()
 
   const { isModalOpen, openModal, closeModal } = useModal()
+
 
   const [showTokenSelect, setShowTokenSelect] = useState(false)
   const [value, setValue] = useState(0)
@@ -354,7 +356,7 @@ const PayPreview = () => {
   const recipientImage = picture?.original?.url
   const senderImage = user?.picture?.original?.url
 
-  const disabled = !value || value > Number(userBalance?.formatted)
+  const disabled = !value || value > Number(userBalance?.formatted) || isPaying
 
   const valueToUsd = useMemo(() => {
     const ethPrice = data?.ethereum?.usd || 1700
@@ -362,7 +364,11 @@ const PayPreview = () => {
   }, [data, value])
 
   useEffect(() => {
-    !isModalOpen && setShowTokenSelect(false)
+    if (!isModalOpen) {
+      setValue(0)
+      setShowTokenSelect(false)
+      setIsPaying(false)
+    }
   }, [isModalOpen])
 
   return (
@@ -433,8 +439,21 @@ const PayPreview = () => {
                       } */}
                       {/* <p>1 RPL = 0.000000000000000001 ETH</p> */}
                     </div>
-                    <Button disabled={disabled}>
-                      SEND
+                      <Button disabled={disabled} onClick={() => {
+                        if (toProfile?.ownedBy && toProfile?.ownedBy !== user?.ownedBy) {
+                          try {
+                            setIsPaying(true)
+                            wethPay({
+                              amount: value,
+                              to: toProfile?.ownedBy,
+                            })
+                          } catch (error) {
+                            console.log(error)
+                            setIsPaying(false)
+                          }
+                        }
+                      }}>
+                        {isPaying ? 'Processing...' : 'Send'}
                     </Button>
                     <p className="instructions">
                       {/* To change the token you are paying with, click on the token icon above. */}

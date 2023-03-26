@@ -1,6 +1,9 @@
 import ghopayabi from "@/utils/contract/ghopayabi"
-import { Contract, getDefaultProvider } from "ethers"
-import { useMemo } from "react"
+import { Contract, getDefaultProvider, utils } from "ethers"
+import { useCallback, useMemo, useState } from "react"
+import { useAccount, useConnect, useSigner } from "wagmi"
+import Web3 from "web3"
+import { toWei } from "./useGetEtherPrice"
 
 type Props = {
   paymentTokenAddress?: string
@@ -8,26 +11,100 @@ type Props = {
 }
 
 const GHO_PAY_ADDRESS = {
-  5: "0x9DCCB25DC86b3A45bDF9DC4b9520EA77603897fA",
+  5: "0xE773B680cC99F0a02F9a0f2dC43b294d981F0702",
 } as Record<number, string>
 
-export const useGhoPay = ({ paymentTokenAddress, settleTokenAddress }: Props) => {
+const WETH_GATEWAY_ADDRESS = {
+  5: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+} as Record<number, string>
+
+export const useGhoPay = () => {
+  const { data: signer, isError, isLoading } = useSigner()
+  const { address } = useAccount()
   const provider = getDefaultProvider()
   const networkId = provider.network.chainId
 
+  const [isPaying, setIsPaying] = useState(false)
+
   const ghoPay = useMemo(() => {
-    const contractAddress = GHO_PAY_ADDRESS[networkId] ?? GHO_PAY_ADDRESS[5]
-    return new Contract(contractAddress, ghopayabi, provider)
-  }, [provider])
+    if (Web3) {
+      const contractAddress = GHO_PAY_ADDRESS[networkId] ?? GHO_PAY_ADDRESS[5]
+      const web3 = new Web3(Web3.givenProvider)
+      const contract = new web3.eth.Contract(ghopayabi as any, contractAddress)
+      return contract
+    }
+  }, [networkId])
 
-  const { paymentToken, settleToken } = useMemo(() => {
-    const paymentToken = paymentTokenAddress ? new Contract(paymentTokenAddress, ghopayabi, provider) : undefined
-    const settleToken = settleTokenAddress ? new Contract(settleTokenAddress, ghopayabi, provider) : undefined
+  const wethPay = useCallback(async ({
+    amount,
+    to,
+  }: {
+    amount: number
+    to: string
+  }) => {
+    const wethAddress = WETH_GATEWAY_ADDRESS[networkId] ?? WETH_GATEWAY_ADDRESS[5]
+    const amountInWei = toWei(amount).toString()
 
-    return { paymentToken, settleToken }
-  }, [paymentTokenAddress, settleTokenAddress])
+    console.log("amount", amount, amountInWei)
+    const action = ghoPay?.methods.wrapETHAndPay(
+      wethAddress,
+      '0x9FD21bE27A2B059a288229361E2fA632D8D2d074',
+      amountInWei,
+      "0xf91bb752490473b8342a3e964e855b9f9a2a668e",
+      "0xf91bb752490473b8342a3e964e855b9f9a2a668e",
+      "0x415565b0000000000000000000000000b4fbf271143f4fbf7b91a5ded31805e42b2208d60000000000000000000000009fd21be27a2b059a288229361e2fa632d8d2d07400000000000000000000000000000000000000000000000000b1a2bc2ec500000000000000000000000000000000000000000000000000000000000417b81d9100000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000003e000000000000000000000000000000000000000000000000000000000000000050000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000034000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b4fbf271143f4fbf7b91a5ded31805e42b2208d60000000000000000000000009fd21be27a2b059a288229361e2fa632d8d2d07400000000000000000000000000000000000000000000000000000000000001400000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000002c000000000000000000000000000000000000000000000000000b1a2bc2ec50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000002556e697377617056320000000000000000000000000000000000000000000000000000000000000000b1a2bc2ec500000000000000000000000000000000000000000000000000000000000417b81d91000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000f164fc0ec4e93095b804a4795bbe1e041497b92a00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000002000000000000000000000000b4fbf271143f4fbf7b91a5ded31805e42b2208d60000000000000000000000009fd21be27a2b059a288229361e2fa632d8d2d0740000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000002000000000000000000000000b4fbf271143f4fbf7b91a5ded31805e42b2208d6000000000000000000000000eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee0000000000000000000000000000000000000000000000000000000000000000869584cd000000000000000000000000100000000000000000000000000000000000001100000000000000000000000000000000000000000000007a835251886420bad7",
+      to,
+    )
+    const estimateGas = await action.estimateGas({ value: amountInWei })
+    console.log({ action }, estimateGas)
+    return action.send({
+      from: address,
+      value: amountInWei,
+      gasLimit: estimateGas,
+    }).on('transactionHash', (hash: string) => {
+      console.info(hash)
+      localStorage.setItem('deposit', hash)
+      // depositingToast(`Depositing ${depositAmount} ${symbol}`)
+    })
+      .on('receipt', (receipt: any) => {
+        console.info(receipt)
+        const txPass = receipt.status === true
+        setIsPaying(false)
+        // setIsSuccess(txPass)
+        // clearState()
+        // getAllowance()
+        // getBalance()
+        // if (txPass) {
+        //   successToast(`Deposited ${depositAmount} ${symbol}!`)
+        // } else {
+        //   errorToast()
+        // }
+      })
+      .on('error', (error: any) => {
+        console.info('error', error)
+        setIsPaying(false)
+        // setIsSuccess(false)
+        // getAllowance()
+        // getBalance()
+        // setIsDepositing(false)
+        // if (error?.code === 4001) {
+        //   errorToast('Deposit cancelled.')
+        // } else {
+        //   errorToast()
+        // }
+      })
+  }, [address, setIsPaying])
 
-  return { paymentToken, settleToken }
+//   const { paymentToken, settleToken } = useMemo(() => {
+//     const paymentToken = paymentTokenAddress ? new Contract(paymentTokenAddress, ghopayabi, provider) : undefined
+//     const settleToken = settleTokenAddress ? new Contract(settleTokenAddress, ghopayabi, provider) : undefined
+
+//     return { paymentToken, settleToken }
+//   }, [paymentTokenAddress, settleTokenAddress])
+
+//   return { paymentToken, settleToken }
+
+  return { ghoPay, wethPay, isPaying, setIsPaying }
 }
 
 

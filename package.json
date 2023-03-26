@@ -20,10 +20,12 @@
     "next": "^13.2.5-canary.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-toastify": "^9.1.2",
     "sharp": "^0.31.3",
     "styled-components": "^5.3.8",
     "swr": "^2.1.1",
-    "wagmi": "^0.12.1"
+    "wagmi": "^0.12.1",
+    "web3": "^1.9.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.35",
