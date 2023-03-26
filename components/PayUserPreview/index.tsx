@@ -9,6 +9,7 @@ import useGetPayData from "@/hooks/useGetPayData"
 
 type Props = {
   profile?: LensProfile | null
+  onPay?: () => void
 }
 
 const StyledPayCard = styled(Card)`
@@ -52,12 +53,12 @@ const StyledPayCard = styled(Card)`
   }
 `
 
-const SideBySide = styled.div`
+const SelectedProfile = styled.div`
   align-items: center;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-between;
-  margin: 3rem auto;
+  justify-content: center;
+  margin: 2rem auto;
   padding: 0;
   width: 65%;
   position: relative;
@@ -67,37 +68,32 @@ const SideBySide = styled.div`
     border: 4px solid #eee;
   }
 `
-SideBySide.displayName = "SideBySide"
+SelectedProfile.displayName = "SelectedProfile"
 
 const PayInstructions = styled.p`
   display: flex;
   flex-direction: column;
-  font-size: 1rem;
-  position: relative;
-  z-index: 2;
+  font-size: 1.2rem;
+  font-weight: 600;
   margin: 0;
   padding: 0;
-
-  span {
-    font-weight: 600;
-    font-size: 1.2rem;
-  }
+  position: relative;
+  z-index: 2;
 `
 
 const COPY = {
   GENERAL: "Enter a handle to get started",
-  RECIPIENT: (name: string) => <PayInstructions>You are interacting with <br /><span>@{name}</span></PayInstructions>
+  RECIPIENT: (name: string) => <PayInstructions>{name}</PayInstructions>
 }
 
-const PayUserPreview = ({ profile }: Props) => {
+const PayUserPreview = ({ profile, onPay }: Props) => {
   const { user } = useGetPayData()
   const { ownedBy, picture, name, handle } = profile ?? {}
   const recipientImage = picture?.original?.url
-  const senderImage = user?.picture?.original?.url
 
   const Instructions = useMemo(() => {
     if (ownedBy) {
-      return COPY.RECIPIENT(handle ?? name ?? getShortenName(ownedBy))
+      return COPY.RECIPIENT(name ?? handle ?? getShortenName(ownedBy))
     }
 
     return (
@@ -108,19 +104,16 @@ const PayUserPreview = ({ profile }: Props) => {
     )
   }, [handle, name, ownedBy])
 
-  if (!user) return null
-
   return (
     <StyledPayCard>
       {Instructions}
-      <SideBySide>
-        <MiniProfile address={user?.ownedBy} image={senderImage} label={user?.name} viewable />
-        {ownedBy && <MiniProfile address={ownedBy} image={recipientImage} label={name} viewable />}
-      </SideBySide>
+      <SelectedProfile>
+        {ownedBy && <MiniProfile address={ownedBy} image={recipientImage} label={`@${handle}`} size={125} viewable />}
+      </SelectedProfile>
       {ownedBy && (
         <ButtonGroup className="button-group">
           <Button disabled>Follow</Button>
-          <Button>Pay</Button>
+          <Button disabled={!user} onClick={onPay}>Pay</Button>
           <Button disabled>Request</Button>
         </ButtonGroup>
       )}

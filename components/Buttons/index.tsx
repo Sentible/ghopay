@@ -13,6 +13,7 @@ const StyledButton = styled.button`
   padding: 1rem 2rem;
   font-size: 1.5rem;
   cursor: pointer;
+  width: 100%;
   &:hover {
     &:not([disabled]) {
       background: #fff;
@@ -20,7 +21,8 @@ const StyledButton = styled.button`
   }
 
   &:disabled&:hover {
-    background: #5a7d25;
+    background: #abfe2c;
+    cursor: initial;
   }
 `;
 

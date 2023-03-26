@@ -7,10 +7,10 @@ import Head from 'next/head';
 import Image from 'next/image';
 
 export const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
-  const { avatar } = useENS(address);
+  // const { avatar } = useENS(address);
   const color = generateColorFromAddress(address);
 
-  const image = avatar || ensImage;
+  const image = ensImage;
   return image ? (
     <Image
       alt="Image"

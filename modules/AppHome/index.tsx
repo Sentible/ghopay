@@ -11,8 +11,8 @@ const StyledAppConnect = styled.div`
   justify-content: center;
   height: 90vh;
 
-  > div + div {
-    margin-top: 3rem;
+  > div + div.search {
+    margin-top: 2rem;
   }
 
   .lens-options {

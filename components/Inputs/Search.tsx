@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
-const StyledInput = styled.input`
+export const StyledInput = styled.input`
   padding: 1.5rem;
   margin: 0.5rem 0;
   border-radius: 20px;
@@ -9,6 +9,7 @@ const StyledInput = styled.input`
   font-size: 1.5rem;
   width: 100%;
 `
+StyledInput.displayName = "StyledInput"
 
 const StyledOptionsDropdown = styled.div`
   max-height: 400px;
@@ -57,7 +58,6 @@ const SearchDropdown = ({ onClick, options = [], children = undefined, title }: 
   options?: string[],
   children?: React.ReactNode
 }) => {
-  console.log('children', children)
   return (
     <StyledOptionsDropdown>
       {/* {children ?? (
@@ -84,7 +84,7 @@ const Search = ({
   title = 'Popular Lens',
   value = ''
 }) => {
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState(false);
   const [inputValue, setInputValue] = useState(value);
 
   const handleClear = useCallback(() => {
@@ -98,7 +98,9 @@ const Search = ({
   }, [value])
 
   return (
-    <StyledSearch onMouseLeave={() => setIsActive(false)}>
+    <StyledSearch className="search" onFocus={() => {
+      setIsActive(true);
+    }} onMouseLeave={() => setIsActive(false)}>
       <>
         <StyledInput onChange={(e) => {
           setInputValue(e.target.value);
@@ -106,9 +108,13 @@ const Search = ({
         }} onMouseDown={() => {
           setIsActive(true);
         }} placeholder={placeholder} value={inputValue} onKeyDown={(e) => {
-          if (e.key === 'Enter') {
+          if (e.key === 'Enter' && inputValue) {
             onClick?.(inputValue);
             setIsActive(false);
+          }
+
+          if (e.key === 'Enter') {
+            setIsActive(true);
           }
 
           if (e.key === 'Escape') {

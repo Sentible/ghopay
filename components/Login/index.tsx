@@ -2,6 +2,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
+import { useCallback } from 'react';
 
 const LensConnectButton = dynamic(() => import('@/components/Buttons/LensConnect'), { ssr: false });
 
@@ -27,9 +28,18 @@ const StyledLogin = styled.div`
 const Login = () => {
   const { isConnected, isConnecting } = useAccount();
 
+  const _WALLET_CONNECT = useCallback(() => {
+    try {
+      return <WalletConnect />
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }, []);
+
   return (
     <StyledLogin>
-      <WalletConnect />
+      <_WALLET_CONNECT />
       {isConnected && <LensConnectButton />}
     </StyledLogin>
   );

@@ -25,7 +25,7 @@ export const useENS = (addressOrEnsName: any) => {
   return {
     address: isaddress ? addressOrEnsName : address?.toString(),
     name: isName ? addressOrEnsName : name?.toString(),
-    avatar: name ? `https://metadata.ens.domains/mainnet/avatar/${name}` : '',
+    // avatar: name ? `https://metadata.ens.domains/mainnet/avatar/${name}` : '',
     loading: addressLoading || nameLoading,
   };
 };

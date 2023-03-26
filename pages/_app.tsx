@@ -11,13 +11,14 @@ import { LensProfileProvider } from '@/utils/store/LensProfile';
 import { localStorage } from '@lens-protocol/react/web';
 import { publicProvider } from 'wagmi/providers/public';
 import type { AppProps } from 'next/app';
+import { GhoPayProvider } from '@/utils/store/GhoPayContext';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
-    // mainnet,
+    mainnet,
     polygon,
-    // optimism,
-    // arbitrum,
+    optimism,
+    arbitrum,
     goerli,
   ],
   [alchemyProvider({ apiKey: 'ZHPkXUR4wLVFFa5X0i9mAXznYu-ZM3K4' }), publicProvider()]
@@ -47,7 +48,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <RainbowKitProvider chains={chains} showRecentTransactions theme={darkTheme()} avatar={CustomAvatar}>
         <LensProvider config={lensConfig}>
           <LensProfileProvider>
-            <Component {...pageProps} />
+            <GhoPayProvider>
+              <Component {...pageProps} />
+            </GhoPayProvider>
           </LensProfileProvider>
         </LensProvider>
       </RainbowKitProvider>

@@ -40,10 +40,10 @@ const PayUserSelect = ({
               name,
               handle,
               picture,
-            }) => (
+            }, i) => (
               <MiniProfile address={ownedBy} key={ownedBy} label={name} image={picture?.original?.url} onClick={() => {
                 setSearch(handle)
-              }} size={55} />
+              }} size={55} index={i} />
             ))}
           </div>
         </>
