@@ -13,12 +13,12 @@ type Props = {
 }
 
 const StyledPayCard = styled(Card)`
-  background-image: url("/gradient.png");
-  background-size: contain;
+  background-image: url("/gradient-color.jfif");
+  /* background-size: contain;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
   border: none;
-  height: 325px;
+  height: 345px;
   max-width: 400px;
   position: relative;
   text-align: center;

@@ -16,6 +16,7 @@ type GhoPayCtx = {
   paymentToken?: AlchemyToken;
   settleToken?: AlchemyToken;
   setPaymentToken: React.Dispatch<React.SetStateAction<AlchemyToken | undefined>>;
+  handlePayment: () => void;
 }
 export const GhoPayContext = React.createContext<GhoPayCtx>({
   ghoPay: {} as Contract,
@@ -25,13 +26,14 @@ export const GhoPayContext = React.createContext<GhoPayCtx>({
   paymentToken: undefined,
   settleToken: undefined,
   setPaymentToken: () => { },
+  handlePayment: () => { }
 });
 
 export const GhoPayProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
 
-  const { ghoPay, wethPay, isPaying, setIsPaying } = useGhoPay()
+  const { ghoPay, wethPay, isPaying, setIsPaying, handlePayment } = useGhoPay()
   const [paymentToken, setPaymentToken] = useState<AlchemyToken>()
   const [settleToken, setSettleToken] = useState<AlchemyToken>()
 
@@ -44,8 +46,9 @@ export const GhoPayProvider: React.FC<{ children: React.ReactNode }> = ({
     ghoPay,
     setIsPaying,
     isPaying,
-    wethPay
-  }), [paymentToken, settleToken, setPaymentToken, ghoPay, wethPay, isPaying, setIsPaying])
+    wethPay,
+    handlePayment,
+  }), [paymentToken, settleToken, setPaymentToken, ghoPay, wethPay, isPaying, setIsPaying, handlePayment])
   return (
     <GhoPayContext.Provider value={values}>
       {children}

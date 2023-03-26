@@ -1,6 +1,6 @@
 import swr from "swr";
 
-const url = 'https://sentible.app/api/v1/ether-price';
+const url = '/api/ether-price';
 const priceFetcher = async () => {
   const response = await fetch(url);
   return response.json() as Promise<{

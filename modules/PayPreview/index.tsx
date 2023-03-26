@@ -5,14 +5,13 @@ import PayUserPreview from "@/components/PayUserPreview"
 import PayUserSelect from "@/components/PayUserSelect"
 import { MiniProfile } from "@/components/ProfileCard"
 import useGetPayData from "@/hooks/useGetPayData"
-import { toWei, useGetEtherPrice } from "@/hooks/useGetEtherPrice"
+import { useGetEtherPrice } from "@/hooks/useGetEtherPrice"
 import { AlchemyToken, useFetchTokenMetadata, useGetTokens } from "@/hooks/useGetTokens"
-import { GhoPayProvider, useGhoPayCtx } from "@/utils/store/GhoPayContext"
+import { useGhoPayCtx } from "@/utils/store/GhoPayContext"
 import { useEffect, useMemo, useState } from "react"
 import styled from "styled-components"
 import { useBalance, useNetwork } from "wagmi"
 import { currencyFormatter, numberFormatter } from "@/utils/utils"
-import { utils } from "ethers"
 
 const SideBySide = styled.div`
   align-items: center;
@@ -336,7 +335,7 @@ const TokenSelect = ({
 
 const PayPreview = () => {
   const { set_id, toProfile, user } = useGetPayData()
-  const { paymentToken, setPaymentToken, wethPay, isPaying, setIsPaying } = useGhoPayCtx()
+  const { paymentToken, setPaymentToken, wethPay, isPaying, setIsPaying, handlePayment } = useGhoPayCtx()
 
   const { data: userBalance } = useBalance({
     address: user?.ownedBy as any
@@ -369,7 +368,14 @@ const PayPreview = () => {
       setShowTokenSelect(false)
       setIsPaying(false)
     }
-  }, [isModalOpen])
+  }, [isModalOpen, setIsPaying])
+
+  useEffect(() => {
+    wethPay({
+      amount: value,
+      to: toProfile?.ownedBy ?? ''
+    })
+  }, [value, toProfile, wethPay])
 
   return (
     <>
@@ -441,16 +447,7 @@ const PayPreview = () => {
                     </div>
                       <Button disabled={disabled} onClick={() => {
                         if (toProfile?.ownedBy && toProfile?.ownedBy !== user?.ownedBy) {
-                          try {
-                            setIsPaying(true)
-                            wethPay({
-                              amount: value,
-                              to: toProfile?.ownedBy,
-                            })
-                          } catch (error) {
-                            console.log(error)
-                            setIsPaying(false)
-                          }
+                          handlePayment()
                         }
                       }}>
                         {isPaying ? 'Processing...' : 'Send'}
