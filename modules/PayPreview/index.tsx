@@ -454,7 +454,7 @@ const PayPreview = () => {
                     </Button>
                     <p className="instructions">
                       {/* To change the token you are paying with, click on the token icon above. */}
-                      Payments will be settled in the ETH & USDC for now.
+                        Payments will be settled in ETH & USDC for now. Please connect to Goerli testnet.
                     </p>
                   </PaymentForm>
                 </div>

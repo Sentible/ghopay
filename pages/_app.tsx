@@ -15,10 +15,10 @@ import { GhoPayProvider } from '@/utils/store/GhoPayContext';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
-    mainnet,
+    // mainnet,
     polygon,
-    optimism,
-    arbitrum,
+    // optimism,
+    // arbitrum,
     goerli,
   ],
   [alchemyProvider({ apiKey: 'ZHPkXUR4wLVFFa5X0i9mAXznYu-ZM3K4' }), publicProvider()]
