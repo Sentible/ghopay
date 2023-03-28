@@ -1,7 +1,7 @@
 import ghopayabi from "@/utils/contract/ghopayabi"
 import { Contract, getDefaultProvider } from "ethers"
 import { useCallback, useMemo, useState } from "react"
-import { useAccount, useSigner } from "wagmi"
+import { useAccount, useSigner, useSwitchNetwork } from "wagmi"
 import Web3 from "web3"
 import { toWei } from "./useGetEtherPrice"
 import { useGetSwapData } from "./useGetSwapData"
@@ -17,7 +17,10 @@ const WETH_GATEWAY_ADDRESS = {
 export const useGhoPay = () => {
   const { data: signer, isError, isLoading } = useSigner()
   const { address } = useAccount()
+  const { switchNetworkAsync, data: currentChain } = useSwitchNetwork()
   const provider = getDefaultProvider()
+
+  const isGoerli = currentChain?.id === 5
   const networkId = provider.network.chainId
   const wethAddress = WETH_GATEWAY_ADDRESS[networkId] ?? WETH_GATEWAY_ADDRESS[5]
 
@@ -119,6 +122,14 @@ export const useGhoPay = () => {
     setRecipient(to)
   }, [])
 
+  const initPayment = useCallback(async () => {
+    if (!isGoerli && switchNetworkAsync) {
+      await switchNetworkAsync(5)
+    } else {
+      await handlePayment()
+    }
+  }, [isGoerli, switchNetworkAsync, handlePayment])
+
 //   const { paymentToken, settleToken } = useMemo(() => {
 //     const paymentToken = paymentTokenAddress ? new Contract(paymentTokenAddress, ghopayabi, provider) : undefined
 //     const settleToken = settleTokenAddress ? new Contract(settleTokenAddress, ghopayabi, provider) : undefined
@@ -128,7 +139,7 @@ export const useGhoPay = () => {
 
 //   return { paymentToken, settleToken }
 
-  return { ghoPay, wethPay, isPaying, setIsPaying, handlePayment }
+  return { ghoPay, wethPay, isPaying, setIsPaying, handlePayment: initPayment }
 }
 
 
