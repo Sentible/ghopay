@@ -1,7 +1,7 @@
 import ghopayabi from '@/utils/contract/ghopayabi'
 import { Contract, getDefaultProvider } from 'ethers'
 import { useCallback, useMemo, useState } from 'react'
-import { useAccount, useSigner, useSwitchNetwork } from 'wagmi'
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
 import Web3 from 'web3'
 import { toWei } from './useGetEtherPrice'
 import { useGetSwapData } from './useGetSwapData'
@@ -15,9 +15,9 @@ const WETH_GATEWAY_ADDRESS = {
 } as Record<number, string>
 
 export const useGhoPay = () => {
-  const { data: signer, isError, isLoading } = useSigner()
   const { address } = useAccount()
-  const { switchNetworkAsync, data: currentChain } = useSwitchNetwork()
+  const { chain: currentChain } = useNetwork()
+  const { switchNetworkAsync } = useSwitchNetwork()
   const provider = getDefaultProvider()
 
   const isGoerli = currentChain?.id === 5
@@ -100,18 +100,6 @@ export const useGhoPay = () => {
     }
   }, [amountInWei, data, ghoPay, address, recipient, isPaying])
 
-  // const wethPay = useCallback(async ({
-  //   amount,
-  //   to,
-  // }: {
-  //   amount: number
-  //   to: string
-  // }) => {
-  //   const toSend = toWei(amount).toString()
-  //   setAmountInWei(toSend)
-  //   setRecipient(to)
-  //   await handlePayment()
-  // }, [handlePayment])
   const wethPay = useCallback(async ({ amount, to }: { amount: number; to: string }) => {
     const toSend = toWei(amount).toString()
     setAmountInWei(toSend)
@@ -119,21 +107,15 @@ export const useGhoPay = () => {
   }, [])
 
   const initPayment = useCallback(async () => {
+    console.log('init payment')
     if (!isGoerli && switchNetworkAsync) {
+      console.log("I'm not on goerli")
       await switchNetworkAsync(5)
     } else {
+      console.log("I'm on goerli")
       await handlePayment()
     }
   }, [isGoerli, switchNetworkAsync, handlePayment])
-
-  //   const { paymentToken, settleToken } = useMemo(() => {
-  //     const paymentToken = paymentTokenAddress ? new Contract(paymentTokenAddress, ghopayabi, provider) : undefined
-  //     const settleToken = settleTokenAddress ? new Contract(settleTokenAddress, ghopayabi, provider) : undefined
-
-  //     return { paymentToken, settleToken }
-  //   }, [paymentTokenAddress, settleTokenAddress])
-
-  //   return { paymentToken, settleToken }
 
   return { ghoPay, wethPay, isPaying, setIsPaying, handlePayment: initPayment }
 }

@@ -5,21 +5,22 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 }
 
 const StyledButton = styled.button`
-  background: #abfe2c;
-  border: 1px solid #abfe2c;
+  background: #4969b2;
+  border: 1px solid #4969b2;
   border-radius: 20px;
   padding: 1rem 2rem;
   font-size: 1.5rem;
   cursor: pointer;
   width: 100%;
+  color: #eee;
   &:hover {
     &:not([disabled]) {
-      background: #fff;
+      background: #2650b2;
     }
   }
 
   &:disabled&:hover {
-    background: #abfe2c;
+    background: #7e99d9;
     cursor: initial;
   }
 `
