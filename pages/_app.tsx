@@ -45,6 +45,16 @@ const wagmiClient = createClient({
 })
 
 const StyledApp = styled.div`
+
+  .modal-overlay {
+    .modal {
+      @media (max-width: 768px) {
+        margin: 1rem;
+        padding: 1rem;
+      }
+    }
+  }
+
   .Toastify__toast-container {
     z-index: 999999;
     @media (max-width: 768px) {

@@ -9,6 +9,14 @@ const PayUserSelect = ({ setValue }: { setValue: (value: string | null) => void 
   const { followers } = useGetPayData()
   const [search, setSearch] = useState('')
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      left: 0,
+      top: 0,
+      behavior: 'auto'
+    })
+  }
+
   const noFollowers = followers.length === 0
 
   const filterOptions = useMemo(() => {
@@ -40,6 +48,7 @@ const PayUserSelect = ({ setValue }: { setValue: (value: string | null) => void 
                 image={picture?.original?.url}
                 onClick={() => {
                   setSearch(handle)
+                  scrollToTop()
                 }}
                 size={55}
                 index={i}
@@ -53,7 +62,10 @@ const PayUserSelect = ({ setValue }: { setValue: (value: string | null) => void 
           <div className='lens-options'>
             {search ||
               POPULAR_LENS.map((p) => (
-                <p onClick={() => setValue(p)} key={p}>
+                <p onClick={() => {
+                  setValue(p)
+                  scrollToTop()
+                }} key={p}>
                   {p}
                 </p>
               ))}

@@ -148,7 +148,7 @@ PaymentSelection.displayName = 'PaymentSelection'
 
 const PaymentForm = styled.div`
   .button {
-    margin-top: 1rem;
+    margin-top: 0.25rem;
   }
   .payment-input {
     display: flex;
@@ -174,6 +174,7 @@ const PaymentForm = styled.div`
   }
 
   .instructions {
+    margin: 0.25rem;
     color: #5e5e5e;
     font-size: 0.75rem;
     padding-left: 0.5rem;

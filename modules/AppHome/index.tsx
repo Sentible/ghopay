@@ -12,7 +12,7 @@ const StyledAppConnect = styled.div`
   height: 90vh;
 
   > div + div.search {
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 
   .lens-options {
