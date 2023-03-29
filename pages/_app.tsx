@@ -45,7 +45,6 @@ const wagmiClient = createClient({
 })
 
 const StyledApp = styled.div`
-
   .modal-overlay {
     .modal {
       @media (max-width: 768px) {

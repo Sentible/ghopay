@@ -13,7 +13,7 @@ const PayUserSelect = ({ setValue }: { setValue: (value: string | null) => void 
     window.scrollTo({
       left: 0,
       top: 0,
-      behavior: 'auto'
+      behavior: 'smooth',
     })
   }
 
@@ -62,10 +62,13 @@ const PayUserSelect = ({ setValue }: { setValue: (value: string | null) => void 
           <div className='lens-options'>
             {search ||
               POPULAR_LENS.map((p) => (
-                <p onClick={() => {
-                  setValue(p)
-                  scrollToTop()
-                }} key={p}>
+                <p
+                  onClick={() => {
+                    setValue(p)
+                    scrollToTop()
+                  }}
+                  key={p}
+                >
                   {p}
                 </p>
               ))}
