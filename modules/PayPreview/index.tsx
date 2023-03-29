@@ -18,7 +18,7 @@ const SideBySide = styled.div`
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  margin: 3rem auto 2rem;
+  margin: 2rem auto;
   padding: 0;
   width: 65%;
   position: relative;
@@ -155,14 +155,15 @@ const PaymentForm = styled.div`
     position: relative;
     width: 100%;
     ${StyledInput} {
-      padding: 1.5rem 5rem 1.5rem 1.5rem;
+      padding: 1rem 5rem 1rem 1.5rem;
+      font-size: 1.3rem;
     }
 
     .img-holder {
       position: absolute;
-      width: 50px;
+      width: 45px;
       right: 1rem;
-      bottom: 1rem;
+      bottom: 0.6rem;
       img {
         border-radius: 50%;
         box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
@@ -193,7 +194,7 @@ const MaxButton = styled.button`
   padding: 0.5rem;
   position: absolute;
   right: 1rem;
-  top: -2rem;
+  top: -1.8rem;
   user-select: none;
 `
 
@@ -205,8 +206,8 @@ const UserBalance = styled.p`
   padding: 0;
   padding-left: 0.5rem;
   position: absolute;
-  left: 1rem;
-  top: 0.8rem;
+  right: 4rem;
+    top: -1.3rem;
 `
 
 const StyledTokenSelect = styled.div`
@@ -419,9 +420,7 @@ const PayPreview = () => {
                 <div className='token-info'>
                   <PaymentForm className='payment-form'>
                     <p className='instructions'>
-                      {value
-                        ? `Pay ${numberFormatter.compact(value)} ETH (${valueToUsd})`
-                        : `Enter amount to send in ${userBalance?.symbol}`}
+                        {`Pay ${numberFormatter.compact(value)} ETH (${valueToUsd})`}
                     </p>
                     <div className='payment-input'>
                       <MaxButton
@@ -435,7 +434,7 @@ const PayPreview = () => {
                       >
                         MAX
                       </MaxButton>
-                      <UserBalance>Balance: {userBalance?.formatted}</UserBalance>
+                        <UserBalance>{numberFormatter.compact(userBalance?.formatted)}</UserBalance>
                       <StyledInput
                         placeholder='0.001234'
                         min='0'
