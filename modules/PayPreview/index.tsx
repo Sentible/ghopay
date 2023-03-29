@@ -207,7 +207,7 @@ const UserBalance = styled.p`
   padding-left: 0.5rem;
   position: absolute;
   right: 4rem;
-    top: -1.3rem;
+  top: -1.3rem;
 `
 
 const StyledTokenSelect = styled.div`
@@ -367,6 +367,8 @@ const PayPreview = () => {
 
   const disabled = !value || value > Number(userBalance?.formatted) || isPaying
 
+  console.log('value', value, disabled)
+
   const valueToUsd = useMemo(() => {
     const ethPrice = data?.ethereum?.usd || 1700
     return currencyFormatter.format(value * ethPrice)
@@ -419,9 +421,7 @@ const PayPreview = () => {
               <PaymentSelection className='payment-selection'>
                 <div className='token-info'>
                   <PaymentForm className='payment-form'>
-                    <p className='instructions'>
-                        {`Pay ${numberFormatter.compact(value)} ETH (${valueToUsd})`}
-                    </p>
+                    <p className='instructions'>{`Pay ${numberFormatter.compact(value)} ETH (${valueToUsd})`}</p>
                     <div className='payment-input'>
                       <MaxButton
                         disabled={isMaxBalance}
@@ -434,7 +434,7 @@ const PayPreview = () => {
                       >
                         MAX
                       </MaxButton>
-                        <UserBalance>{numberFormatter.compact(userBalance?.formatted)}</UserBalance>
+                      <UserBalance>{numberFormatter.compact(userBalance?.formatted)}</UserBalance>
                       <StyledInput
                         placeholder='0.001234'
                         min='0'
@@ -469,7 +469,8 @@ const PayPreview = () => {
                     <Button
                       disabled={disabled}
                       onClick={() => {
-                        if (toProfile?.ownedBy && toProfile?.ownedBy !== user?.ownedBy) {
+                        if (toProfile?.ownedBy && value) {
+                          console.log('paying')
                           handlePayment()
                         }
                       }}

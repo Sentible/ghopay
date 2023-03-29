@@ -13,27 +13,14 @@ type Props = {
 }
 
 const StyledPayCard = styled(Card)`
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
   background-image: url('/gradient-color.jfif');
-  /* background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat; */
   border: none;
   height: 345px;
   max-width: 400px;
   position: relative;
   text-align: center;
-
-  /* blur background only not text */
-  &::before {
-    background: rgba(255, 255, 255, 0.55);
-    content: '';
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 1;
-  }
 
   h4 {
     margin: 0.5rem 0;
@@ -107,7 +94,7 @@ const PayUserPreview = ({ profile, onPay }: Props) => {
   }, [handle, name, ownedBy])
 
   return (
-    <StyledPayCard>
+    <StyledPayCard className='pay-card'>
       {Instructions}
       <SelectedProfile>
         {ownedBy && <MiniProfile address={ownedBy} image={recipientImage} label={`@${handle}`} size={125} viewable />}

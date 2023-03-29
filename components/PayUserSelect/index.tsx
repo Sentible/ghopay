@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 import { MiniProfile } from '../ProfileCard'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import useGetPayData from '@/hooks/useGetPayData'
 
 const LensSearch = dynamic(() => import('@/components/Inputs/Search'), { ssr: false })
@@ -9,13 +9,11 @@ const PayUserSelect = ({ setValue }: { setValue: (value: string | null) => void 
   const { followers } = useGetPayData()
   const [search, setSearch] = useState('')
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      left: 0,
-      top: 0,
-      behavior: 'smooth',
-    })
-  }
+  const scrollToTop = useCallback(() => {
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, 100)
+  }, [])
 
   const noFollowers = followers.length === 0
 

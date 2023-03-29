@@ -9,7 +9,7 @@ const StyledAppConnect = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 90vh;
+  height: 100vh;
 
   > div + div.search {
     margin-top: 1rem;
