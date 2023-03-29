@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useMemo } from "react";
-import { useProfileFollowing } from "@lens-protocol/react";
+import React, { useContext, useEffect, useMemo } from 'react'
+import { useProfileFollowing } from '@lens-protocol/react'
 
-import { formatLink, isTokenExpired } from "@/utils/utils";
-import { LENS_CREDS, LENS_PROFILE } from "@/utils/constants";
-import { LensProfile } from "@/utils/ghopay";
-import { useAccount } from "wagmi";
+import { formatLink, isTokenExpired } from '@/utils/utils'
+import { LENS_CREDS, LENS_PROFILE } from '@/utils/constants'
+import { LensProfile } from '@/utils/ghopay'
+import { useAccount } from 'wagmi'
 
 type LensProfileCtx = {
   followers: LensProfile[]
-  profile: LensProfile | null;
-  setProfile: React.Dispatch<React.SetStateAction<any>>;
+  profile: LensProfile | null
+  setProfile: React.Dispatch<React.SetStateAction<any>>
 }
 
 const getLensCredentials = () => {
@@ -21,23 +21,19 @@ const getLensCredentials = () => {
 export const LensProfileContext = React.createContext<LensProfileCtx>({
   followers: [],
   profile: null,
-  setProfile: () => { },
-});
+  setProfile: () => {},
+})
 
-export const LensProfileProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const { isConnected } = useAccount();
-  const [followers, setFollowers] = React.useState<LensProfile[]>([]);
-  const [profile, setProfile] = React.useState<any>(null);
+export const LensProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isConnected } = useAccount()
+  const [followers, setFollowers] = React.useState<LensProfile[]>([])
+  const [profile, setProfile] = React.useState<any>(null)
 
-  const {
-    data
-  } = useProfileFollowing({
+  const { data } = useProfileFollowing({
     observerId: profile?.id,
     limit: 50,
     walletAddress: profile?.ownedBy as string,
-  });
+  })
 
   useEffect(() => {
     const credentials = getLensCredentials()
@@ -56,22 +52,18 @@ export const LensProfileProvider: React.FC<{ children: React.ReactNode }> = ({
         ...profile,
         picture: {
           original: {
-            url: formatLink((profile.picture as any)?.original?.url)
-          }
-        } as any
+            url: formatLink((profile.picture as any)?.original?.url),
+          },
+        } as any,
       }))
       const sorted = [...remap].sort((a, b) => a.name?.localeCompare(b.name ?? '') || a.handle.localeCompare(b.handle))
       setFollowers(sorted as LensProfile[])
     }
   }, [data])
 
-  const values = useMemo(() => ({ followers, profile, setProfile }), [followers, profile, setProfile]);
+  const values = useMemo(() => ({ followers, profile, setProfile }), [followers, profile, setProfile])
 
-  return (
-    <LensProfileContext.Provider value={values}>
-      {children}
-    </LensProfileContext.Provider>
-  );
-};
+  return <LensProfileContext.Provider value={values}>{children}</LensProfileContext.Provider>
+}
 
-export const useLensProfile = () => useContext(LensProfileContext);
+export const useLensProfile = () => useContext(LensProfileContext)

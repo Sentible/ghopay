@@ -1,33 +1,31 @@
 function jwt_decode(token: any) {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const base64Url = token.split('.')[1]
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
   const jsonPayload = decodeURIComponent(
     atob(base64)
       .split('')
       .map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
       })
-      .join('')
-  );
+      .join(''),
+  )
 
-  return JSON.parse(jsonPayload);
+  return JSON.parse(jsonPayload)
 }
 
 export function isTokenExpired(token: any) {
-  const decodedToken = jwt_decode(token);
-  const expirationTime = decodedToken.exp;
-  const currentTime = Date.now() / 1000; // convert to seconds
+  const decodedToken = jwt_decode(token)
+  const expirationTime = decodedToken.exp
+  const currentTime = Date.now() / 1000 // convert to seconds
 
   if (currentTime > expirationTime) {
     // Token has expired
-    return true;
+    return true
   } else {
     // Token is still valid
-    return false;
+    return false
   }
 }
-
-
 
 const IPFS = 'ipfs://'
 export function formatLink(str?: string) {
@@ -50,25 +48,23 @@ export const getShortenName = (address?: string) => {
 }
 
 export function generateColorFromAddress(address: any) {
-  if (!address) return 'hsl(0, 0%, 50%)';
-  const hash = address
-    .split('')
-    .reduce((acc: any, char: any) => acc + char.charCodeAt(0), 0);
-  const hue = hash % 360;
-  return `hsl(${hue}, 50%, 50%)`;
+  if (!address) return 'hsl(0, 0%, 50%)'
+  const hash = address.split('').reduce((acc: any, char: any) => acc + char.charCodeAt(0), 0)
+  const hue = hash % 360
+  return `hsl(${hue}, 50%, 50%)`
 }
 const userLocale = 'en-US'
 
 const currencyOptions: Intl.NumberFormatOptions = {
   currency: 'USD',
   style: 'currency',
-  minimumFractionDigits: 2
+  minimumFractionDigits: 2,
   // notation: 'compact', //user can choose this
 }
 
 const numberOptions: Intl.NumberFormatOptions = {
   style: 'decimal',
-  maximumFractionDigits: 2
+  maximumFractionDigits: 2,
 }
 
 export const numberFormatter = {
@@ -76,17 +72,17 @@ export const numberFormatter = {
     const formatter = new Intl.NumberFormat(userLocale, {
       ...numberOptions,
       notation: 'compact',
-      maximumFractionDigits: digits
+      maximumFractionDigits: digits,
     })
     return formatter.format(Number(value ?? 0))
   },
   format: (value?: string | number, digits = 2) => {
     const formatter = new Intl.NumberFormat(userLocale, {
       ...numberOptions,
-      maximumFractionDigits: digits
+      maximumFractionDigits: digits,
     })
     return formatter.format(Number(value ?? 0))
-  }
+  },
 }
 
 export const currencyFormatter = {
@@ -94,15 +90,15 @@ export const currencyFormatter = {
     const formatter = new Intl.NumberFormat(userLocale, {
       ...currencyOptions,
       notation: 'compact',
-      maximumFractionDigits: digits
+      maximumFractionDigits: digits,
     })
     return formatter.format(Number(value ?? 0))
   },
   format: (value?: string | number, digits = 2) => {
     const formatter = new Intl.NumberFormat(userLocale, {
       ...currencyOptions,
-      minimumFractionDigits: digits
+      minimumFractionDigits: digits,
     })
     return formatter.format(Number(value ?? 0))
-  }
+  },
 }

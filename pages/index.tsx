@@ -1,24 +1,18 @@
-import { useENS } from '@/hooks/useEns';
-import AppHome from '@/modules/AppHome';
-import { generateColorFromAddress } from '@/utils/utils';
-import { AvatarComponent } from '@rainbow-me/rainbowkit';
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import Image from 'next/image';
+import { useENS } from '@/hooks/useEns'
+import AppHome from '@/modules/AppHome'
+import { generateColorFromAddress } from '@/utils/utils'
+import { AvatarComponent } from '@rainbow-me/rainbowkit'
+import type { NextPage } from 'next'
+import Head from 'next/head'
+import Image from 'next/image'
 
 export const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
   // const { avatar } = useENS(address);
-  const color = generateColorFromAddress(address);
+  const color = generateColorFromAddress(address)
 
-  const image = ensImage;
+  const image = ensImage
   return image ? (
-    <Image
-      alt="Image"
-      src={image ?? ''}
-      width={size}
-      height={size}
-      style={{ borderRadius: 999 }}
-    />
+    <Image alt='Image' src={image ?? ''} width={size} height={size} style={{ borderRadius: 999 }} />
   ) : (
     <div
       style={{
@@ -27,23 +21,17 @@ export const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
         height: size,
         width: size,
       }}
-    >
-    </div>
-  );
-};
-
-
+    ></div>
+  )
+}
 
 const Home: NextPage = () => {
   return (
     <div>
       <Head>
         <title>GhoPay</title>
-        <meta
-          content="GhoPay"
-          name="description"
-        />
-        <link href="/favicon.ico" rel="icon" />
+        <meta content='GhoPay' name='description' />
+        <link href='/favicon.ico' rel='icon' />
       </Head>
 
       <AppHome />
@@ -54,7 +42,7 @@ const Home: NextPage = () => {
         </a>
       </footer> */}
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
+import { useCallback, useEffect, useState } from 'react'
+import styled from 'styled-components'
 
 export const StyledInput = styled.input`
   padding: 1.5rem;
@@ -9,7 +9,7 @@ export const StyledInput = styled.input`
   font-size: 1.5rem;
   width: 100%;
 `
-StyledInput.displayName = "StyledInput"
+StyledInput.displayName = 'StyledInput'
 
 const StyledOptionsDropdown = styled.div`
   max-height: 400px;
@@ -50,12 +50,17 @@ const ClearButton = styled.button`
   &:hover {
     color: #abfe2c;
   }
-`;
+`
 
-const SearchDropdown = ({ onClick, options = [], children = undefined, title }: {
-  onClick?: <T>(value?: T) => void,
-  title?: string,
-  options?: string[],
+const SearchDropdown = ({
+  onClick,
+  options = [],
+  children = undefined,
+  title,
+}: {
+  onClick?: <T>(value?: T) => void
+  title?: string
+  options?: string[]
   children?: React.ReactNode
 }) => {
   return (
@@ -77,56 +82,73 @@ const SearchDropdown = ({ onClick, options = [], children = undefined, title }: 
 
 const Search = ({
   children = undefined as any,
-  onClick = (value: any) => { },
-  onChange = (value: any) => { },
+  onClick = (value: any) => {},
+  onChange = (value: any) => {},
   placeholder = 'stani.lens, vitalik.eth, ...0xbc',
   options = [] as any[],
   title = 'Popular Lens',
-  value = ''
+  value = '',
 }) => {
-  const [isActive, setIsActive] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
+  const [isActive, setIsActive] = useState(false)
+  const [inputValue, setInputValue] = useState(value)
 
   const handleClear = useCallback(() => {
-    setInputValue("");
-    onChange?.("");
-    onClick?.("");
-  }, [onChange, onClick]);
+    setInputValue('')
+    onChange?.('')
+    onClick?.('')
+  }, [onChange, onClick])
 
   useEffect(() => {
-    setInputValue(value);
+    setInputValue(value)
   }, [value])
 
   return (
-    <StyledSearch className="search" onFocus={() => {
-      setIsActive(true);
-    }} onMouseLeave={() => setIsActive(false)}>
+    <StyledSearch
+      className='search'
+      onFocus={() => {
+        setIsActive(true)
+      }}
+      onMouseLeave={() => setIsActive(false)}
+    >
       <>
-        <StyledInput onChange={(e) => {
-          setInputValue(e.target.value);
-          onChange?.(e.target.value);
-        }} onMouseDown={() => {
-          setIsActive(true);
-        }} placeholder={placeholder} value={inputValue} onKeyDown={(e) => {
-          if (e.key === 'Enter' && inputValue) {
-            onClick?.(inputValue);
-            setIsActive(false);
-          }
+        <StyledInput
+          onChange={(e) => {
+            setInputValue(e.target.value)
+            onChange?.(e.target.value)
+          }}
+          onMouseDown={() => {
+            setIsActive(true)
+          }}
+          placeholder={placeholder}
+          value={inputValue}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && inputValue) {
+              onClick?.(inputValue)
+              setIsActive(false)
+            }
 
-          if (e.key === 'Enter') {
-            setIsActive(true);
-          }
+            if (e.key === 'Enter') {
+              setIsActive(true)
+            }
 
-          if (e.key === 'Escape') {
-            setIsActive(false);
-          }
-        }} />
+            if (e.key === 'Escape') {
+              setIsActive(false)
+            }
+          }}
+        />
         {inputValue && <ClearButton onClick={handleClear}>✖</ClearButton>}
       </>
-      {isActive && (<SearchDropdown children={children} onClick={(item) => {
-        onClick(item)
-        setIsActive(false)
-      }} title={title} options={options} />)}
+      {isActive && (
+        <SearchDropdown
+          children={children}
+          onClick={(item) => {
+            onClick(item)
+            setIsActive(false)
+          }}
+          title={title}
+          options={options}
+        />
+      )}
     </StyledSearch>
   )
 }

@@ -1,18 +1,18 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount } from 'wagmi';
-import dynamic from 'next/dynamic';
-import styled from 'styled-components';
-import { useCallback } from 'react';
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { useAccount } from 'wagmi'
+import dynamic from 'next/dynamic'
+import styled from 'styled-components'
+import { useCallback } from 'react'
 
-const LensConnectButton = dynamic(() => import('@/components/Buttons/LensConnect'), { ssr: false });
+const LensConnectButton = dynamic(() => import('@/components/Buttons/LensConnect'), { ssr: false })
 
 const WalletConnect = () => {
-  const { isConnected, isConnecting } = useAccount();
+  const { isConnected, isConnecting } = useAccount()
 
-  if (!isConnecting && isConnected) return null;
+  if (!isConnecting && isConnected) return null
 
-  return <ConnectButton />;
-};
+  return <ConnectButton />
+}
 
 const StyledLogin = styled.div`
   display: flex;
@@ -26,23 +26,23 @@ const StyledLogin = styled.div`
 `
 
 const Login = () => {
-  const { isConnected, isConnecting } = useAccount();
+  const { isConnected, isConnecting } = useAccount()
 
   const _WALLET_CONNECT = useCallback(() => {
     try {
       return <WalletConnect />
     } catch (error) {
-      console.error(error);
-      return null;
+      console.error(error)
+      return null
     }
-  }, []);
+  }, [])
 
   return (
     <StyledLogin>
       <_WALLET_CONNECT />
       {isConnected && <LensConnectButton />}
     </StyledLogin>
-  );
+  )
 }
 
-export default Login;
+export default Login

@@ -1,17 +1,17 @@
-import ghopayabi from "@/utils/contract/ghopayabi"
-import { Contract, getDefaultProvider } from "ethers"
-import { useCallback, useMemo, useState } from "react"
-import { useAccount, useSigner, useSwitchNetwork } from "wagmi"
-import Web3 from "web3"
-import { toWei } from "./useGetEtherPrice"
-import { useGetSwapData } from "./useGetSwapData"
+import ghopayabi from '@/utils/contract/ghopayabi'
+import { Contract, getDefaultProvider } from 'ethers'
+import { useCallback, useMemo, useState } from 'react'
+import { useAccount, useSigner, useSwitchNetwork } from 'wagmi'
+import Web3 from 'web3'
+import { toWei } from './useGetEtherPrice'
+import { useGetSwapData } from './useGetSwapData'
 
 const GHO_PAY_ADDRESS = {
-  5: "0xE773B680cC99F0a02F9a0f2dC43b294d981F0702",
+  5: '0xE773B680cC99F0a02F9a0f2dC43b294d981F0702',
 } as Record<number, string>
 
 const WETH_GATEWAY_ADDRESS = {
-  5: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+  5: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
 } as Record<number, string>
 
 export const useGhoPay = () => {
@@ -57,17 +57,19 @@ export const useGhoPay = () => {
       )
       const estimateGas = await action.estimateGas({ value: amountInWei })
       console.log({ action }, estimateGas)
-      return action.send({
-        from: address,
-        value: amountInWei,
-        gasLimit: estimateGas,
-      }).on('transactionHash', (hash: string) => {
-        console.info(hash)
-        setIsPaying(false)
-        localStorage.setItem('deposit', hash)
-        window.open(`https://goerli.etherscan.io/tx/${hash}`, '_blank')
-        // depositingToast(`Depositing ${depositAmount} ${symbol}`)
-      })
+      return action
+        .send({
+          from: address,
+          value: amountInWei,
+          gasLimit: estimateGas,
+        })
+        .on('transactionHash', (hash: string) => {
+          console.info(hash)
+          setIsPaying(false)
+          localStorage.setItem('deposit', hash)
+          window.open(`https://goerli.etherscan.io/tx/${hash}`, '_blank')
+          // depositingToast(`Depositing ${depositAmount} ${symbol}`)
+        })
         .on('receipt', (receipt: any) => {
           console.info(receipt)
           const txPass = receipt.status === true
@@ -110,13 +112,7 @@ export const useGhoPay = () => {
   //   setRecipient(to)
   //   await handlePayment()
   // }, [handlePayment])
-  const wethPay = useCallback(async ({
-    amount,
-    to,
-  }: {
-    amount: number
-    to: string
-  }) => {
+  const wethPay = useCallback(async ({ amount, to }: { amount: number; to: string }) => {
     const toSend = toWei(amount).toString()
     setAmountInWei(toSend)
     setRecipient(to)
@@ -130,24 +126,23 @@ export const useGhoPay = () => {
     }
   }, [isGoerli, switchNetworkAsync, handlePayment])
 
-//   const { paymentToken, settleToken } = useMemo(() => {
-//     const paymentToken = paymentTokenAddress ? new Contract(paymentTokenAddress, ghopayabi, provider) : undefined
-//     const settleToken = settleTokenAddress ? new Contract(settleTokenAddress, ghopayabi, provider) : undefined
+  //   const { paymentToken, settleToken } = useMemo(() => {
+  //     const paymentToken = paymentTokenAddress ? new Contract(paymentTokenAddress, ghopayabi, provider) : undefined
+  //     const settleToken = settleTokenAddress ? new Contract(settleTokenAddress, ghopayabi, provider) : undefined
 
-//     return { paymentToken, settleToken }
-//   }, [paymentTokenAddress, settleTokenAddress])
+  //     return { paymentToken, settleToken }
+  //   }, [paymentTokenAddress, settleTokenAddress])
 
-//   return { paymentToken, settleToken }
+  //   return { paymentToken, settleToken }
 
   return { ghoPay, wethPay, isPaying, setIsPaying, handlePayment: initPayment }
 }
-
 
 export const useWethGateway = () => {
   const provider = getDefaultProvider()
 
   const wethGateway = useMemo(() => {
-    return new Contract("0x8e9a29e7e1dcbbdecb2442282a1fd7d7a9c3e01a", ghopayabi, provider)
+    return new Contract('0x8e9a29e7e1dcbbdecb2442282a1fd7d7a9c3e01a', ghopayabi, provider)
   }, [])
 
   return { wethGateway }

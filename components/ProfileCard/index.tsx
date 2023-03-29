@@ -1,11 +1,11 @@
-import { usePrevious } from "@/hooks/usePrevious"
-import { CustomAvatar } from "@/pages"
-import { useEffect, useState } from "react"
-import styled from "styled-components"
+import { usePrevious } from '@/hooks/usePrevious'
+import { CustomAvatar } from '@/pages'
+import { useEffect, useState } from 'react'
+import styled from 'styled-components'
 
 const StyledMiniProfile = styled.div`
   align-self: flex-start;
-  max-width: 12ch;
+  max-width: 11ch;
   user-select: none;
   white-space: nowrap;
 
@@ -24,7 +24,7 @@ const StyledMiniProfile = styled.div`
     text-align: center;
   }
 `
-StyledMiniProfile.displayName = "StyledMiniProfile"
+StyledMiniProfile.displayName = 'StyledMiniProfile'
 
 type Props = {
   address?: string
@@ -38,10 +38,7 @@ type Props = {
 
 const viewUrl = (address: string) => `https://sentible.app/view/${address}/nfts`
 export const MiniProfile = ({ address = '', image = '', label = '', size = 100, onClick, viewable, index }: Props) => {
-  const className = [
-    "mini-profile",
-    viewable
-  ].join(" ")
+  const className = ['mini-profile', viewable].join(' ')
 
   const [img, setImg] = useState<string | undefined>()
 
@@ -58,18 +55,21 @@ export const MiniProfile = ({ address = '', image = '', label = '', size = 100, 
     }
   }, [image, prevImage])
 
-
   return (
-    <StyledMiniProfile className={className} onClick={(e) => {
-      const isImage = e.target instanceof HTMLImageElement
-      if (viewable && address && isImage) {
-        window.open(viewUrl(address), "_blank")
-      } else {
-        onClick?.()
-      }
-    }} tabIndex={index}>
+    <StyledMiniProfile
+      className={className}
+      onClick={(e) => {
+        const isImage = e.target instanceof HTMLImageElement
+        if (viewable && address && isImage) {
+          window.open(viewUrl(address), '_blank')
+        } else {
+          onClick?.()
+        }
+      }}
+      tabIndex={index}
+    >
       <CustomAvatar address={address as string} ensImage={img} size={size} />
-      <p className="label">{label}</p>
+      <p className='label'>{label}</p>
     </StyledMiniProfile>
   )
 }

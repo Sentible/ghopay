@@ -1,10 +1,8 @@
-
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  className?: string;
-};
-
+  className?: string
+}
 
 const StyledButton = styled.button`
   background: #abfe2c;
@@ -24,7 +22,7 @@ const StyledButton = styled.button`
     background: #abfe2c;
     cursor: initial;
   }
-`;
+`
 
 export const ButtonGroup = styled.div`
   display: flex;
@@ -35,14 +33,14 @@ export const ButtonGroup = styled.div`
 ButtonGroup.displayName = 'ButtonGroup'
 
 const Button = (props: ButtonProps) => {
-  const { children, className, ...rest } = props;
+  const { children, className, ...rest } = props
 
-  const cN = className ? `${className} button` : 'button';
+  const cN = className ? `${className} button` : 'button'
   return (
     <StyledButton className={cN} {...rest}>
       {children}
     </StyledButton>
-  );
-};
+  )
+}
 
-export default Button;
+export default Button
