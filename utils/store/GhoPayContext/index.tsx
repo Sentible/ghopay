@@ -1,59 +1,52 @@
-import React, { useContext, useState, useMemo } from "react";
-import { useProfileFollowing } from "@lens-protocol/react";
+import React, { useContext, useState, useMemo } from 'react'
+import { useProfileFollowing } from '@lens-protocol/react'
 import { Contract } from 'web3-eth-contract'
-import { AlchemyToken, useGetTokens } from "@/hooks/useGetTokens";
-import { useBalance } from "wagmi";
-import { useGhoPay } from "@/hooks/useGhoPay";
+import { AlchemyToken, useGetTokens } from '@/hooks/useGetTokens'
+import { useBalance } from 'wagmi'
+import { useGhoPay } from '@/hooks/useGhoPay'
 
 type GhoPayCtx = {
-  ghoPay: Contract | undefined;
-  wethPay: ({ amount, to }: {
-    amount: number;
-    to: string;
-  }) => void;
-  isPaying: boolean;
-  setIsPaying: React.Dispatch<React.SetStateAction<boolean>>;
-  paymentToken?: AlchemyToken;
-  settleToken?: AlchemyToken;
-  setPaymentToken: React.Dispatch<React.SetStateAction<AlchemyToken | undefined>>;
-  handlePayment: () => void;
+  ghoPay: Contract | undefined
+  wethPay: ({ amount, to }: { amount: number; to: string }) => void
+  isPaying: boolean
+  setIsPaying: React.Dispatch<React.SetStateAction<boolean>>
+  paymentToken?: AlchemyToken
+  settleToken?: AlchemyToken
+  setPaymentToken: React.Dispatch<React.SetStateAction<AlchemyToken | undefined>>
+  handlePayment: () => void
 }
 export const GhoPayContext = React.createContext<GhoPayCtx>({
   ghoPay: {} as Contract,
-  wethPay: () => { },
+  wethPay: () => {},
   isPaying: false,
-  setIsPaying: () => { },
+  setIsPaying: () => {},
   paymentToken: undefined,
   settleToken: undefined,
-  setPaymentToken: () => { },
-  handlePayment: () => { }
-});
+  setPaymentToken: () => {},
+  handlePayment: () => {},
+})
 
-export const GhoPayProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-
+export const GhoPayProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { ghoPay, wethPay, isPaying, setIsPaying, handlePayment } = useGhoPay()
   const [paymentToken, setPaymentToken] = useState<AlchemyToken>()
   const [settleToken, setSettleToken] = useState<AlchemyToken>()
 
   useGetTokens()
 
-  const values = useMemo(() => ({
-    paymentToken,
-    settleToken,
-    setPaymentToken,
-    ghoPay,
-    setIsPaying,
-    isPaying,
-    wethPay,
-    handlePayment,
-  }), [paymentToken, settleToken, setPaymentToken, ghoPay, wethPay, isPaying, setIsPaying, handlePayment])
-  return (
-    <GhoPayContext.Provider value={values}>
-      {children}
-    </GhoPayContext.Provider>
-  );
-};
+  const values = useMemo(
+    () => ({
+      paymentToken,
+      settleToken,
+      setPaymentToken,
+      ghoPay,
+      setIsPaying,
+      isPaying,
+      wethPay,
+      handlePayment,
+    }),
+    [paymentToken, settleToken, setPaymentToken, ghoPay, wethPay, isPaying, setIsPaying, handlePayment],
+  )
+  return <GhoPayContext.Provider value={values}>{children}</GhoPayContext.Provider>
+}
 
-export const useGhoPayCtx = () => useContext(GhoPayContext);
+export const useGhoPayCtx = () => useContext(GhoPayContext)

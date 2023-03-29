@@ -6,24 +6,21 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 const baseurl = 'https://goerli.api.0x.org/swap/v1/quote'
 
 const Headers = {
-  'accept': 'application/json',
+  accept: 'application/json',
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { buyToken, sellToken, sellAmount } = req.query;
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { buyToken, sellToken, sellAmount } = req.query
 
   console.log(buyToken, sellToken, sellAmount, req.query)
 
-  const url = `${baseurl}?buyToken=${buyToken}&sellToken=${sellToken}&sellAmount=${sellAmount}&slippagePercentage=0.05`;
+  const url = `${baseurl}?buyToken=${buyToken}&sellToken=${sellToken}&sellAmount=${sellAmount}&slippagePercentage=0.05`
 
   try {
-    const response = await (await fetch(url, { headers: Headers })).json();
-    res.send(response);
+    const response = await (await fetch(url, { headers: Headers })).json()
+    res.send(response)
   } catch (error) {
-    console.log(error);
-    res.send({});
+    console.log(error)
+    res.send({})
   }
 }

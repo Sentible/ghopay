@@ -1,8 +1,8 @@
-import dynamic from "next/dynamic";
-import styled from "styled-components";
+import dynamic from 'next/dynamic'
+import styled from 'styled-components'
 
-const Login = dynamic(() => import('@/components/Login'), { ssr: false });
-const PayPreview = dynamic(() => import('@/modules/PayPreview'), { ssr: false });
+const Login = dynamic(() => import('@/components/Login'), { ssr: false })
+const PayPreview = dynamic(() => import('@/modules/PayPreview'), { ssr: false })
 
 const StyledAppConnect = styled.div`
   display: flex;
@@ -12,7 +12,7 @@ const StyledAppConnect = styled.div`
   height: 90vh;
 
   > div + div.search {
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 
   .lens-options {
@@ -27,9 +27,9 @@ const StyledAppConnect = styled.div`
 
       img {
         &:hover {
-        cursor: pointer;
-        border: 2px solid #abfe2c;
-      }
+          cursor: pointer;
+          border: 2px solid #abfe2c;
+        }
       }
 
       p.label {
@@ -47,7 +47,7 @@ const AppHome = () => {
       <Login />
       <PayPreview />
     </StyledAppConnect>
-  );
-};
+  )
+}
 
-export default AppHome;
+export default AppHome

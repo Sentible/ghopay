@@ -1,8 +1,8 @@
-import { LensProfile } from "@/utils/ghopay"
-import { useLensProfile } from "@/utils/store/LensProfile"
-import { formatLink } from "@/utils/utils"
-import { useProfile } from "@lens-protocol/react"
-import { useEffect, useState } from "react"
+import { LensProfile } from '@/utils/ghopay'
+import { useLensProfile } from '@/utils/store/LensProfile'
+import { formatLink } from '@/utils/utils'
+import { useProfile } from '@lens-protocol/react'
+import { useEffect, useState } from 'react'
 
 const useGetPayData = () => {
   const [_id, set_id] = useState<string | null>(null)
@@ -10,11 +10,8 @@ const useGetPayData = () => {
 
   const { profile: user, followers } = useLensProfile()
   const { data: recipient } = useProfile({
-    handle:
-      _id?.match('.lens') ? _id : undefined as any
+    handle: _id?.match('.lens') ? _id : (undefined as any),
   }) as { data: LensProfile | undefined }
-
-
 
   useEffect(() => {
     if (recipient) {
@@ -22,9 +19,9 @@ const useGetPayData = () => {
         ...recipient,
         picture: {
           original: {
-            url: formatLink(recipient.picture?.original?.url)
-          } as any
-        }
+            url: formatLink(recipient.picture?.original?.url),
+          } as any,
+        },
       })
     }
   }, [recipient])
@@ -36,7 +33,7 @@ const useGetPayData = () => {
     user,
     followers,
     toProfile,
-    setToProfile
+    setToProfile,
   }
 }
 

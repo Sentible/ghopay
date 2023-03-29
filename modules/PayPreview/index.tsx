@@ -1,17 +1,17 @@
-import Button from "@/components/Buttons"
-import { StyledInput } from "@/components/Inputs/Search"
-import Modal, { useModal } from "@/components/Modal"
-import PayUserPreview from "@/components/PayUserPreview"
-import PayUserSelect from "@/components/PayUserSelect"
-import { MiniProfile } from "@/components/ProfileCard"
-import useGetPayData from "@/hooks/useGetPayData"
-import { useGetEtherPrice } from "@/hooks/useGetEtherPrice"
-import { AlchemyToken, useFetchTokenMetadata, useGetTokens } from "@/hooks/useGetTokens"
-import { useGhoPayCtx } from "@/utils/store/GhoPayContext"
-import { useEffect, useMemo, useState } from "react"
-import styled from "styled-components"
-import { useBalance, useNetwork } from "wagmi"
-import { currencyFormatter, numberFormatter } from "@/utils/utils"
+import Button from '@/components/Buttons'
+import { StyledInput } from '@/components/Inputs/Search'
+import Modal, { useModal } from '@/components/Modal'
+import PayUserPreview from '@/components/PayUserPreview'
+import PayUserSelect from '@/components/PayUserSelect'
+import { MiniProfile } from '@/components/ProfileCard'
+import useGetPayData from '@/hooks/useGetPayData'
+import { useGetEtherPrice } from '@/hooks/useGetEtherPrice'
+import { AlchemyToken, useFetchTokenMetadata, useGetTokens } from '@/hooks/useGetTokens'
+import { useGhoPayCtx } from '@/utils/store/GhoPayContext'
+import { useEffect, useMemo, useState } from 'react'
+import styled from 'styled-components'
+import { useBalance, useNetwork } from 'wagmi'
+import { currencyFormatter, numberFormatter } from '@/utils/utils'
 
 const SideBySide = styled.div`
   align-items: center;
@@ -87,7 +87,6 @@ const PayIcon = styled.span`
   position: relative;
   user-select: none;
 
-
   @keyframes slide-in {
     0% {
       transform: translateY(100px);
@@ -122,7 +121,6 @@ const PayIcon = styled.span`
       transform: rotate(0deg);
     }
   }
-
 `
 
 const ModalInstructions = styled.div`
@@ -150,7 +148,7 @@ PaymentSelection.displayName = 'PaymentSelection'
 
 const PaymentForm = styled.div`
   .button {
-    margin-top: 1rem;
+    margin-top: 0.25rem;
   }
   .payment-input {
     display: flex;
@@ -176,6 +174,7 @@ const PaymentForm = styled.div`
   }
 
   .instructions {
+    margin: 0.25rem;
     color: #5e5e5e;
     font-size: 0.75rem;
     padding-left: 0.5rem;
@@ -258,37 +257,41 @@ const StyledTokenSelect = styled.div`
 `
 StyledTokenSelect.displayName = 'StyledTokenSelect'
 
-
 const SelectedToken = ({
   onToggle,
   token,
   visible,
 }: {
-  onToggle: () => void,
-  token: AlchemyToken,
-  visible?: boolean,
+  onToggle: () => void
+  token: AlchemyToken
+  visible?: boolean
 }) => {
   const { networkId, contractAddress } = token || {}
   const { chain } = useNetwork()
 
-  const { data } = useFetchTokenMetadata(contractAddress ? null as any : contractAddress, chain?.id)
+  const { data } = useFetchTokenMetadata(contractAddress ? (null as any) : contractAddress, chain?.id)
 
   const formattedToken = useMemo(() => {
-    return ({
+    return {
       ...token,
-      ...data?.result ? {
-        decimals: data.result?.decimals,
-        name: data.result?.name,
-        symbol: data.result?.symbol,
-        logo: data.result?.logo,
-        tokenBalance: data.result?.decimals ? Number(token.tokenBalance) / 10 ** data.result?.decimals : token.tokenBalance,
-      } : {},
-    })
+      ...(data?.result
+        ? {
+            decimals: data.result?.decimals,
+            name: data.result?.name,
+            symbol: data.result?.symbol,
+            logo: data.result?.logo,
+            tokenBalance: data.result?.decimals
+              ? Number(token.tokenBalance) / 10 ** data.result?.decimals
+              : token.tokenBalance,
+          }
+        : {}),
+    }
   }, [data, token, contractAddress])
 
   const zeroBalance = formattedToken?.tokenBalance === 0
 
-  const isEmpty = formattedToken?.decimals === 0 || (!formattedToken?.name && !formattedToken?.symbol && !formattedToken?.decimals)
+  const isEmpty =
+    formattedToken?.decimals === 0 || (!formattedToken?.name && !formattedToken?.symbol && !formattedToken?.decimals)
 
   if (isEmpty || zeroBalance) {
     return null
@@ -297,31 +300,38 @@ const SelectedToken = ({
   const logo = formattedToken?.logo
 
   return (
-    <div className="token-item img-holder" onClick={(e) => {
-      e.preventDefault()
-      console.log('clicked')
-      onToggle()
-    }}>
-      {logo ? <img height={'50px'} width={'50px'} src={logo} alt="RPL" /> :
-        (formattedToken?.symbol || formattedToken?.name)
-      }
+    <div
+      className='token-item img-holder'
+      onClick={(e) => {
+        e.preventDefault()
+        console.log('clicked')
+        onToggle()
+      }}
+    >
+      {logo ? (
+        <img height={'50px'} width={'50px'} src={logo} alt='RPL' />
+      ) : (
+        formattedToken?.symbol || formattedToken?.name
+      )}
     </div>
   )
 }
 
-
-const TokenSelect = ({
-  goBack = () => { },
-  onTokenSelect = (token: AlchemyToken) => { },
-}) => {
+const TokenSelect = ({ goBack = () => {}, onTokenSelect = (token: AlchemyToken) => {} }) => {
   const { tokens } = useGetTokens()
 
   return (
     <StyledTokenSelect>
       <ModalInstructions>
-        <p><span className="go-back" title="go back" onClick={goBack}> 👈 </span>Choose a token</p>
+        <p>
+          <span className='go-back' title='go back' onClick={goBack}>
+            {' '}
+            👈{' '}
+          </span>
+          Choose a token
+        </p>
       </ModalInstructions>
-      <div className="tokens">
+      <div className='tokens'>
         {tokens?.map((token, i) => (
           // <div className="token-item" key={token?.contractAddress}>
           //   <p onClick={() => onTokenSelect(token)}>hi {Number(token?.tokenBalance) / Math.pow(10, 18)}</p>
@@ -338,20 +348,19 @@ const PayPreview = () => {
   const { paymentToken, setPaymentToken, wethPay, isPaying, setIsPaying, handlePayment } = useGhoPayCtx()
 
   const { data: userBalance } = useBalance({
-    address: user?.ownedBy as any
+    address: user?.ownedBy as any,
   })
 
   const { data } = useGetEtherPrice()
 
   const { isModalOpen, openModal, closeModal } = useModal()
 
-
   const [showTokenSelect, setShowTokenSelect] = useState(false)
   const [value, setValue] = useState(0)
 
   const { ownedBy, picture, name, handle } = toProfile ?? {}
 
-  const isMaxBalance = value + (Number(userBalance?.formatted) * 0.0005) === Number(userBalance?.formatted)
+  const isMaxBalance = value + Number(userBalance?.formatted) * 0.0005 === Number(userBalance?.formatted)
   const recipientImage = picture?.original?.url
   const senderImage = user?.picture?.original?.url
 
@@ -373,7 +382,7 @@ const PayPreview = () => {
   useEffect(() => {
     wethPay({
       amount: value,
-      to: toProfile?.ownedBy ?? ''
+      to: toProfile?.ownedBy ?? '',
     })
   }, [value, toProfile, wethPay])
 
@@ -384,12 +393,15 @@ const PayPreview = () => {
       <div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           {showTokenSelect ? (
-            <TokenSelect goBack={() => {
-              setShowTokenSelect(false)
-            }} onTokenSelect={(token) => {
-              setPaymentToken(token)
-              setShowTokenSelect(false)
-            }} />
+            <TokenSelect
+              goBack={() => {
+                setShowTokenSelect(false)
+              }}
+              onTokenSelect={(token) => {
+                setPaymentToken(token)
+                setShowTokenSelect(false)
+              }}
+            />
           ) : (
             <>
               <ModalInstructions>
@@ -397,40 +409,50 @@ const PayPreview = () => {
                 <h2>{handle}</h2>
               </ModalInstructions>
               <SideBySide>
-                {user?.ownedBy && <MiniProfile address={user?.ownedBy} image={senderImage} label={`@${user?.handle}`} size={125} />}
+                {user?.ownedBy && (
+                  <MiniProfile address={user?.ownedBy} image={senderImage} label={`@${user?.handle}`} size={125} />
+                )}
                 <PayIcon>🤝</PayIcon>
                 {ownedBy && <MiniProfile address={ownedBy} image={recipientImage} label={`@${handle}`} size={125} />}
               </SideBySide>
-              <PaymentSelection className="payment-selection">
-                <div className="token-info">
-                  <PaymentForm className="payment-form">
-                    <p className="instructions">
-                      {value ? `Pay ${numberFormatter.compact(value)} ETH (${valueToUsd})` :
-                        `Enter amount to send in ${userBalance?.symbol}`}
+              <PaymentSelection className='payment-selection'>
+                <div className='token-info'>
+                  <PaymentForm className='payment-form'>
+                    <p className='instructions'>
+                      {value
+                        ? `Pay ${numberFormatter.compact(value)} ETH (${valueToUsd})`
+                        : `Enter amount to send in ${userBalance?.symbol}`}
                     </p>
-                    <div className="payment-input">
-                      <MaxButton disabled={isMaxBalance} onClick={() => {
-                        const balance = Number(userBalance?.formatted)
-                        const minBalance = balance * 0.0005
-                        const max = balance - minBalance
-                        setValue(max)
-                      }}>MAX</MaxButton>
-                      <UserBalance>
-                        Balance: {userBalance?.formatted}
-                      </UserBalance>
-                      <StyledInput placeholder="0.001234"
-                        min="0"
-                        type="number"
+                    <div className='payment-input'>
+                      <MaxButton
+                        disabled={isMaxBalance}
+                        onClick={() => {
+                          const balance = Number(userBalance?.formatted)
+                          const minBalance = balance * 0.0005
+                          const max = balance - minBalance
+                          setValue(max)
+                        }}
+                      >
+                        MAX
+                      </MaxButton>
+                      <UserBalance>Balance: {userBalance?.formatted}</UserBalance>
+                      <StyledInput
+                        placeholder='0.001234'
+                        min='0'
+                        type='number'
                         onChange={(e) => {
                           setValue(Number(e.target.value))
                         }}
                         value={value}
                       />
-                      <div className="img-holder" onClick={(e) => {
-                        e.preventDefault()
-                        console.log('clicked')
-                        // setShowTokenSelect(true)
-                      }}>
+                      <div
+                        className='img-holder'
+                        onClick={(e) => {
+                          e.preventDefault()
+                          console.log('clicked')
+                          // setShowTokenSelect(true)
+                        }}
+                      >
                         <img src='/eth.png' alt={userBalance?.symbol} />
                       </div>
 
@@ -445,25 +467,28 @@ const PayPreview = () => {
                       } */}
                       {/* <p>1 RPL = 0.000000000000000001 ETH</p> */}
                     </div>
-                      <Button disabled={disabled} onClick={() => {
+                    <Button
+                      disabled={disabled}
+                      onClick={() => {
                         if (toProfile?.ownedBy && toProfile?.ownedBy !== user?.ownedBy) {
                           handlePayment()
                         }
-                      }}>
-                        {isPaying ? 'Processing...' : 'Send'}
+                      }}
+                    >
+                      {isPaying ? 'Processing...' : 'Send'}
                     </Button>
-                    <p className="instructions">
+                    <p className='instructions'>
                       {/* To change the token you are paying with, click on the token icon above. */}
-                        Payments will be settled in ETH & USDC for now. Please connect to Goerli testnet.
+                      Payments will be settled in ETH & USDC for now. Please connect to Goerli testnet.
                     </p>
                   </PaymentForm>
                 </div>
               </PaymentSelection>
-              </>
+            </>
           )}
-        </Modal >
+        </Modal>
       </div>
-    </ >
+    </>
   )
 }
 

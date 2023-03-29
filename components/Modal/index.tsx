@@ -1,26 +1,26 @@
-import React from 'react';
-import styled from 'styled-components';
-import Card from '../Card';
+import React from 'react'
+import styled from 'styled-components'
+import Card from '../Card'
 
 type Props = {
-  children: React.ReactNode;
-  className?: string;
-  isOpen: boolean;
-  onClose?: () => void;
+  children: React.ReactNode
+  className?: string
+  isOpen: boolean
+  onClose?: () => void
 }
 
 export const useModal = () => {
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = React.useState(false)
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
 
   return {
     openModal,
     closeModal,
-    isModalOpen
+    isModalOpen,
   }
-};
+}
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -51,9 +51,7 @@ const StyledModal = styled(Card)`
 `
 StyledModal.displayName = 'StyledModal'
 
-const StyledModalContent = styled.div`
-
-`
+const StyledModalContent = styled.div``
 
 const CloseButton = styled.button`
   position: absolute;
@@ -69,23 +67,18 @@ const CloseButton = styled.button`
 `
 
 const Modal = ({ className, isOpen, onClose, children }: Props) => {
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
-  const _className = [
-    'modal',
-    className || ''
-  ].join(' ');
+  const _className = ['modal', className || ''].join(' ')
 
   return (
-    <ModalOverlay className="modal-overlay">
+    <ModalOverlay className='modal-overlay'>
       <StyledModal className={_className}>
         <CloseButton onClick={onClose}>✖</CloseButton>
-        <StyledModalContent>
-          {children}
-        </StyledModalContent>
+        <StyledModalContent>{children}</StyledModalContent>
       </StyledModal>
     </ModalOverlay>
-  );
-};
+  )
+}
 
-export default Modal;
+export default Modal

@@ -1,11 +1,11 @@
-import { getShortenName } from "@/utils/utils"
-import { LensProfile } from "@/utils/ghopay"
-import { MiniProfile } from "../ProfileCard"
-import { useMemo } from "react"
-import Button, { ButtonGroup } from "../Buttons"
-import Card from "../Card"
-import styled from "styled-components"
-import useGetPayData from "@/hooks/useGetPayData"
+import { getShortenName } from '@/utils/utils'
+import { LensProfile } from '@/utils/ghopay'
+import { MiniProfile } from '../ProfileCard'
+import { useMemo } from 'react'
+import Button, { ButtonGroup } from '../Buttons'
+import Card from '../Card'
+import styled from 'styled-components'
+import useGetPayData from '@/hooks/useGetPayData'
 
 type Props = {
   profile?: LensProfile | null
@@ -13,7 +13,7 @@ type Props = {
 }
 
 const StyledPayCard = styled(Card)`
-  background-image: url("/gradient-color.jfif");
+  background-image: url('/gradient-color.jfif');
   /* background-size: contain;
   background-position: center;
   background-repeat: no-repeat; */
@@ -26,7 +26,7 @@ const StyledPayCard = styled(Card)`
   /* blur background only not text */
   &::before {
     background: rgba(255, 255, 255, 0.55);
-    content: "";
+    content: '';
     height: 100%;
     left: 0;
     position: absolute;
@@ -68,9 +68,11 @@ const SelectedProfile = styled.div`
     border: 4px solid #eee;
   }
 `
-SelectedProfile.displayName = "SelectedProfile"
+SelectedProfile.displayName = 'SelectedProfile'
 
 const PayInstructions = styled.p`
+  text-overflow: ellipsis;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   font-size: 1.2rem;
@@ -82,8 +84,8 @@ const PayInstructions = styled.p`
 `
 
 const COPY = {
-  GENERAL: "Enter a handle to get started",
-  RECIPIENT: (name: string) => <PayInstructions>{name}</PayInstructions>
+  GENERAL: 'Enter a handle to get started',
+  RECIPIENT: (name: string) => <PayInstructions>{name}</PayInstructions>,
 }
 
 const PayUserPreview = ({ profile, onPay }: Props) => {
@@ -111,9 +113,11 @@ const PayUserPreview = ({ profile, onPay }: Props) => {
         {ownedBy && <MiniProfile address={ownedBy} image={recipientImage} label={`@${handle}`} size={125} viewable />}
       </SelectedProfile>
       {ownedBy && (
-        <ButtonGroup className="button-group">
+        <ButtonGroup className='button-group'>
           <Button disabled>Follow</Button>
-          <Button disabled={!user} onClick={onPay}>Pay</Button>
+          <Button disabled={!user} onClick={onPay}>
+            Pay
+          </Button>
           <Button disabled>Request</Button>
         </ButtonGroup>
       )}
