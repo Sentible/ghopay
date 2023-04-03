@@ -31,7 +31,7 @@ const PayUserSelect = ({ setValue }: { setValue: (value: string | null) => void 
       onClick={setSearch}
       onChange={setSearch}
       title='Profiles You Follow'
-      placeholder='vitalik.eth, stani.lens, ...0xb..'
+      placeholder='vitalik.lens, stani.lens, ...0xb..'
       value={search}
     >
       {!!filterOptions?.length ? (
