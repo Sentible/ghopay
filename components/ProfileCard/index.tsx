@@ -15,6 +15,7 @@ const StyledMiniProfile = styled.div`
 
   img {
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 3px solid #004b23;
   }
 
   .label {

@@ -5,8 +5,9 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 }
 
 const StyledButton = styled.button`
-  background: #4969b2;
-  border: 1px solid #4969b2;
+  background: #007200;
+  border: 1px solid #008A34;
+  box-shadow: 0px 4px 6px rgba(0, 50, 0, 0.2);
   border-radius: 20px;
   padding: 1rem 2rem;
   font-size: 1.5rem;
@@ -15,12 +16,12 @@ const StyledButton = styled.button`
   color: #eee;
   &:hover {
     &:not([disabled]) {
-      background: #2650b2;
+      background: #008000;
     }
   }
 
   &:disabled&:hover {
-    background: #7e99d9;
+    background: #007200;
     cursor: initial;
   }
 `

@@ -2,12 +2,17 @@ import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 export const StyledInput = styled.input`
+  box-shadow: 0px 4px 6px rgba(200, 180, 130, 0.2);
   padding: 1.5rem;
   margin: 0.5rem 0;
   border-radius: 20px;
-  border: 1px solid #abfe2c;
+  border: 1px solid #3c8f5e;
   font-size: 1.5rem;
   width: 100%;
+
+  &:focus {
+    outline: none;
+  }
 `
 StyledInput.displayName = 'StyledInput'
 
@@ -20,7 +25,7 @@ const StyledOptionsDropdown = styled.div`
   width: 100%;
   background: #fff;
   border-radius: 20px;
-  border: 1px solid #abfe2c;
+  border: 1px solid #3c8f5e;
   padding: 2rem;
   z-index: 100;
 `
@@ -48,7 +53,7 @@ const ClearButton = styled.button`
   cursor: pointer;
   font-size: 1rem;
   &:hover {
-    color: #abfe2c;
+    color: #38b000;
   }
 `
 

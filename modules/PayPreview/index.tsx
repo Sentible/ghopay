@@ -32,10 +32,6 @@ const SideBySide = styled.div`
     width: 100%;
   }
 
-  img {
-    border: 4px solid #eee;
-  }
-
   .mini-profile {
     &:nth-child(1) {
       animation: slide-in-profile-one 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;

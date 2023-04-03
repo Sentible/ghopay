@@ -13,13 +13,13 @@ type Props = {
 }
 
 const StyledPayCard = styled(Card)`
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
-    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   background-image: url('/gradient-color.jfif');
   border: none;
   height: 345px;
   max-width: 400px;
   position: relative;
+  top: -20px;
   text-align: center;
 
   h4 {
@@ -51,9 +51,6 @@ const SelectedProfile = styled.div`
   position: relative;
   z-index: 2;
 
-  img {
-    border: 4px solid #eee;
-  }
 `
 SelectedProfile.displayName = 'SelectedProfile'
 
