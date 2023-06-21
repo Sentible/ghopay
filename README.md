@@ -1,3 +1,26 @@
+Project Description
+GhoPay is a protocol that allows signed-up users to decide what tokens their Lens or ENS handles get paid in. This allows their peers to send them any token without worrying about converting it. Cross-chain payments can be supported on most major EVMs. The main goal of GhoPay is to make it easier to handle payments in web3 when dealing with hex addresses. Instead, you can use the handles of addresses from popular protocols like Lens and ENS.
+
+How it's Made
+We are using next.js, react, wagmi, and lens protocol for our website UI. In order to load certain payment profiles we will be using Lens Protocol. For cross-chain support, we will be using the Connext Network. Polybase will be used to store users' p2p transactions done through GhoPay, and as a way to also highlight certain accounts you want to pay from your lens profile quickly, Polygon and Optimism will be the demo cross-chain networks.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##################################
+
 This is a [RainbowKit](https://rainbowkit.com) + [wagmi](https://wagmi.sh) + [Next.js](https://nextjs.org/) project bootstrapped with [`create-rainbowkit`](https://github.com/rainbow-me/rainbowkit/tree/main/packages/create-rainbowkit).
 
 ## Getting Started
